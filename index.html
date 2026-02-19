@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAAS — Centro de Descargas · Área 4</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --bg:      #0d0f14;
+    --surface: #141720;
+    --surface2:#1a1e2e;
+    --border:  #252a38;
+    --accent:  #4fffb0;
+    --accent2: #ff6b6b;
+    --accent3: #93c5fd;
+    --text:    #e8ecf0;
+    --muted:   #6b7280;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 3rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,255,176,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,255,176,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header { margin-bottom: 2rem; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); font-weight: 600; }
+  .subtitle {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  /* ── MODE SELECTOR ── */
+  .mode-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .mode-btn {
+    background: var(--surface);
+    border: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border-right: 1px solid var(--border);
+  }
+  .mode-btn:last-child { border-right: none; }
+  .mode-btn .mode-icon { font-size: 1.2rem; }
+  .mode-btn.active {
+    background: rgba(79,255,176,0.08);
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+  }
+  .mode-btn:hover:not(.active) { color: var(--text); background: var(--surface2); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .card-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── TOKEN ── */
+  .token-status {
+    font-family: var(--mono);
+    font-size: 0.67rem;
+    margin-bottom: 0.45rem;
+    min-height: 0.9rem;
+  }
+  .token-status.saved   { color: var(--accent); }
+  .token-status.unsaved { color: #fbbf24; }
+
+  input[type="password"], input[type="text"], input[type="date"], textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234fffb0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    padding-right: 2rem;
+    cursor: pointer;
+  }
+  select option { background: #1a1e2e; color: var(--text); }
+
+  .btn-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .btn-sm {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.67rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── OS GRID ── */
+  .os-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+  .os-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.78rem;
+    user-select: none;
+  }
+  .os-item:hover { border-color: var(--accent); }
+  .os-item.active { border-color: var(--accent); background: rgba(79,255,176,0.05); }
+  .os-item.active .dot { background: var(--accent); }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  /* ── DATE ROW ── */
+  .date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  input[type="date"] { color-scheme: dark; }
+
+  /* ── PANEL SECTIONS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── AÑOS GRID (para pedidos) ── */
+  .years-grid {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .year-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .year-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(79,255,176,0.06); }
+  .year-btn:hover:not(.active) { border-color: var(--text); color: var(--text); }
+
+  /* ── MODE TEST ── */
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .checkbox-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  /* ── DOWNLOAD BUTTON ── */
+  .btn-download {
+    width: 100%;
+    background: var(--accent);
+    color: #0d0f14;
+    border: none;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.25rem;
+  }
+  .btn-download:hover { background: #3de89a; }
+  .btn-download:disabled { background: var(--muted); cursor: not-allowed; }
+  .btn-download .btn-inner { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+
+  .btn-cancel {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.6rem;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: all 0.2s;
+    display: none;
+  }
+  .btn-cancel.visible { display: block; }
+  .btn-cancel:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { display: none; margin-top: 1rem; }
+  .progress-wrap.visible { display: block; }
+  .progress-bar-bg { background: var(--border); height: 3px; width: 100%; overflow: hidden; margin-bottom: 0.75rem; }
+  .progress-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+  .log {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 0.75rem;
+  }
+  .log-line { line-height: 1.8; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .log-line.ok   { color: var(--accent); }
+  .log-line.err  { color: var(--accent2); }
+  .log-line.info { color: var(--accent3); }
+
+  .result-ok {
+    display: none;
+    margin-top: 0.75rem;
+    border: 1px solid var(--accent);
+    padding: 0.85rem 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    background: rgba(79,255,176,0.05);
+    line-height: 1.6;
+  }
+  .result-ok.visible { display: block; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 101;
+  }
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  .modal-steps { display: flex; flex-direction: column; gap: 0.4rem; }
+  .step { font-size: 0.78rem; color: var(--muted); display: flex; gap: 0.6rem; align-items: flex-start; line-height: 1.5; }
+  .step b { color: var(--text); }
+  .step code { background: rgba(79,255,176,0.1); color: var(--accent); padding: 0 0.3rem; font-family: var(--mono); font-size: 0.68rem; }
+  .step-num { background: var(--accent); color: #0d0f14; font-family: var(--mono); font-weight: 600; font-size: 0.6rem; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .btn-open-site { background: none; border: 1px solid var(--accent); color: var(--accent); font-family: var(--mono); font-size: 0.73rem; padding: 0.45rem 0.9rem; cursor: pointer; transition: all 0.2s; align-self: flex-start; }
+  .btn-open-site:hover { background: rgba(79,255,176,0.1); }
+  .modal-box textarea { resize: vertical; min-height: 80px; }
+  .modal-actions { display: flex; gap: 0.5rem; }
+  .btn-modal-ok { flex: 1; background: var(--accent); color: #0d0f14; border: none; font-family: var(--mono); font-weight: 600; font-size: 0.75rem; padding: 0.6rem; cursor: pointer; transition: all 0.2s; }
+  .btn-modal-ok:hover { background: #3de89a; }
+  .btn-modal-cancel { background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.75rem; padding: 0.6rem 1rem; cursor: pointer; transition: all 0.2s; }
+  .btn-modal-cancel:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  footer { margin-top: 2rem; font-family: var(--mono); font-size: 0.63rem; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="badge">SAAS · Área 4 · Integración</div>
+    <h1>Centro de<br><span>Descargas</span></h1>
+    <p class="subtitle">// gLiquidacionAreaId=4 · Token Bearer requerido</p>
+  </header>
+
+  <!-- TOKEN CARD -->
+  <div class="card">
+    <span class="card-label">Bearer Token</span>
+    <div class="token-status" id="tokenStatus"></div>
+    <input type="password" id="bearerInput" placeholder="eyJhbGciOi..." oninput="onTokenInput()" />
+    <div class="btn-row">
+      <button class="btn-sm" onclick="toggleVis()">👁 Mostrar / Ocultar</button>
+      <button class="btn-sm" onclick="guardarToken()">💾 Guardar token</button>
+      <button class="btn-sm" onclick="abrirPopupToken()">🌐 Obtener del sitio</button>
+    </div>
+  </div>
+
+  <!-- MODE SELECTOR -->
+  <div class="mode-selector">
+    <button class="mode-btn active" id="modeBtn0" onclick="setMode(0)">
+      <span class="mode-icon">📊</span>
+      <span>Comprobantes Subidos</span>
+      <span style="font-size:0.6rem;opacity:.6;">Excel · todas las OS</span>
+    </button>
+    <button class="mode-btn" id="modeBtn1" onclick="setMode(1)">
+      <span class="mode-icon">📋</span>
+      <span>Pedido Integración SSS</span>
+      <span style="font-size:0.6rem;opacity:.6;">CSV · por período</span>
+    </button>
+  </div>
+
+  <!-- ── PANEL 0: COMPROBANTES EXCEL ── -->
+  <div class="panel active" id="panel0">
+
+    <div class="card">
+      <span class="card-label">Obras Sociales</span>
+      <div class="os-grid" id="osGridExcel"></div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Rango de fechas</span>
+      <div class="date-row">
+        <div>
+          <span class="card-label">Desde</span>
+          <input type="date" id="dateFrom" />
+        </div>
+        <div>
+          <span class="card-label">Hasta</span>
+          <input type="date" id="dateTo" />
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-download" id="btnExcel" onclick="iniciarDescargaExcel()">
+      <div class="btn-inner"><span>▼</span><span>Descargar Excel Unificado</span></div>
+    </button>
+    <button class="btn-cancel" id="cancelExcel" onclick="cancelarExcel()">✕ Cancelar</button>
+
+  </div>
+
+  <!-- ── PANEL 1: PEDIDOS CSV ── -->
+  <div class="panel" id="panel1">
+
+    <div class="card">
+      <span class="card-label">Obras Sociales</span>
+      <div class="os-grid" id="osGridCsv"></div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Años a incluir</span>
+      <div class="years-grid" id="yearsGrid"></div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Tipo de pedido</span>
+      <select id="tipoSelect">
+        <option value="aceptados">Aceptados</option>
+        <option value="rechazados">Rechazados</option>
+        <option value="noaceptados">No Aceptados Ni Rechazados</option>
+      </select>
+      <div class="checkbox-row" style="margin-top:0.75rem;">
+        <input type="checkbox" id="modoPrueba" />
+        <label class="checkbox-label" for="modoPrueba">Modo prueba (1 obra, 1 período)</label>
+      </div>
+    </div>
+
+    <button class="btn-download" id="btnCsv" onclick="iniciarDescargaCsv()">
+      <div class="btn-inner"><span>▼</span><span>Descargar CSV Pedidos</span></div>
+    </button>
+    <button class="btn-cancel" id="cancelCsv" onclick="cancelarCsv()">✕ Cancelar</button>
+
+  </div>
+
+  <!-- SHARED PROGRESS -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="log" id="logBox"></div>
+  </div>
+  <div class="result-ok" id="resultOk"></div>
+
+  <footer>gLiquidacionAreaId=4 · CORS required · localStorage token persistence</footer>
+</div>
+
+<!-- MODAL TOKEN -->
+<div class="modal-overlay" id="modalOverlay" onclick="cerrarModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">Obtener Bearer Token</div>
+    <div class="modal-steps">
+      <div class="step"><span class="step-num">1</span>Se abrirá <b>coberturasalud.saas.com.ar</b> en una nueva ventana</div>
+      <div class="step"><span class="step-num">2</span>Iniciá sesión si hace falta</div>
+      <div class="step"><span class="step-num">3</span>Abrí DevTools → Application → Local Storage → clave <code>Credentials</code></div>
+      <div class="step"><span class="step-num">4</span>Copiá el valor del campo <code>token</code> y pegalo abajo</div>
+    </div>
+    <button class="btn-open-site" onclick="window.open('https://coberturasalud.saas.com.ar','_blank')">Abrir sitio →</button>
+    <span class="card-label" style="margin-top:0.5rem;">Pegá el token o el JSON completo de Credentials:</span>
+    <textarea id="modalTokenInput" placeholder='eyJhbGciOi...  ó  {"token":"eyJ..."}'></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-ok" onclick="usarTokenDelModal()">Usar este token</button>
+      <button class="btn-modal-cancel" onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  CONSTANTES
+// ═══════════════════════════════════════════════════════
+const OBRAS = [
+  {nombre:"Cobertura de Salud", base:"https://coberturasalud.client-api.saas.com.ar"},
+  {nombre:"OSMISS",             base:"https://osmiss.client-api.saas.com.ar"},
+  {nombre:"OSEN",               base:"https://osen.client-api.saas.com.ar"},
+  {nombre:"VIALIDAD",           base:"https://ostv.client-api.saas.com.ar"},
+  {nombre:"OSSIMRA",            base:"https://ossimra.client-api.saas.com.ar"},
+  {nombre:"OSCONARA",           base:"https://osconara.client-api.saas.com.ar"},
+];
+const G_LIQ_AREA_ID  = 4;
+const LS_TOKEN_KEY   = 'comprobantes_bearer_token';
+const CURRENT_YEAR   = new Date().getFullYear();
+const YEARS_DISPLAY  = [CURRENT_YEAR - 1, CURRENT_YEAR]; // 2025, 2026
+
+// ═══════════════════════════════════════════════════════
+//  ESTADO
+// ═══════════════════════════════════════════════════════
+let selExcel   = new Set(OBRAS.map((_,i)=>i));
+let selCsv     = new Set(OBRAS.map((_,i)=>i));
+let selYears   = new Set(YEARS_DISPLAY);  // ambos por defecto
+let abortCtrl  = null;
+let cancelFlag = false;
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+(function init(){
+  buildOsGrid('osGridExcel', selExcel);
+  buildOsGrid('osGridCsv',   selCsv);
+  buildYearsGrid();
+  setDateDefaults();
+  cargarTokenGuardado();
+})();
+
+// ═══════════════════════════════════════════════════════
+//  MODE TOGGLE
+// ═══════════════════════════════════════════════════════
+function setMode(idx){
+  [0,1].forEach(i => {
+    document.getElementById(`panel${i}`).classList.toggle('active', i===idx);
+    document.getElementById(`modeBtn${i}`).classList.toggle('active', i===idx);
+  });
+  resetUI();
+}
+
+// ═══════════════════════════════════════════════════════
+//  OS GRIDS
+// ═══════════════════════════════════════════════════════
+function buildOsGrid(containerId, selSet){
+  const grid = document.getElementById(containerId);
+  OBRAS.forEach((os, i) => {
+    const el = document.createElement('div');
+    el.className = 'os-item active';
+    el.id = `${containerId}-${i}`;
+    el.innerHTML = `<div class="dot"></div><span>${os.nombre}</span>`;
+    el.onclick = () => {
+      if(selSet.has(i)){ selSet.delete(i); el.classList.remove('active'); }
+      else             { selSet.add(i);    el.classList.add('active'); }
+    };
+    grid.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  YEARS GRID
+// ═══════════════════════════════════════════════════════
+function buildYearsGrid(){
+  const grid = document.getElementById('yearsGrid');
+  YEARS_DISPLAY.forEach(y => {
+    const btn = document.createElement('button');
+    btn.className = 'year-btn active';
+    btn.textContent = y;
+    btn.dataset.year = y;
+    btn.onclick = () => {
+      if(selYears.has(y)){ selYears.delete(y); btn.classList.remove('active'); }
+      else               { selYears.add(y);    btn.classList.add('active'); }
+    };
+    grid.appendChild(btn);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  FECHAS DEFAULT: hoy-6m → hoy
+// ═══════════════════════════════════════════════════════
+function setDateDefaults(){
+  const pad = n => String(n).padStart(2,'0');
+  const hoy   = new Date();
+  const desde = new Date(hoy);
+  desde.setMonth(desde.getMonth() - 6);
+  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  document.getElementById('dateFrom').value = fmt(desde);
+  document.getElementById('dateTo').value   = fmt(hoy);
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOKEN
+// ═══════════════════════════════════════════════════════
+function cargarTokenGuardado(){
+  try {
+    const saved = localStorage.getItem(LS_TOKEN_KEY);
+    if(saved){ document.getElementById('bearerInput').value = saved; setTokenStatus('saved','✓ Token guardado cargado'); }
+    else       { setTokenStatus('unsaved','— Sin token guardado'); }
+  } catch(e){}
+}
+function guardarToken(){
+  const t = document.getElementById('bearerInput').value.trim();
+  if(!t){ alert('No hay token para guardar.'); return; }
+  try { localStorage.setItem(LS_TOKEN_KEY, t); setTokenStatus('saved','✓ Token guardado correctamente'); }
+  catch(e){ alert('No se pudo guardar: '+e.message); }
+}
+function setTokenStatus(tipo, msg){
+  const el = document.getElementById('tokenStatus');
+  el.textContent = msg; el.className = `token-status ${tipo}`;
+}
+function onTokenInput(){
+  const val = document.getElementById('bearerInput').value.trim();
+  try {
+    const saved = localStorage.getItem(LS_TOKEN_KEY);
+    if(!val) setTokenStatus('unsaved','— Sin token');
+    else if(saved && val===saved) setTokenStatus('saved','✓ Coincide con el guardado');
+    else setTokenStatus('unsaved','⚠ Token modificado — no guardado');
+  } catch(e){}
+}
+function toggleVis(){
+  const inp = document.getElementById('bearerInput');
+  inp.type = inp.type==='password'?'text':'password';
+}
+function abrirPopupToken(){ document.getElementById('modalOverlay').classList.add('open'); document.getElementById('modalTokenInput').value=''; }
+function cerrarModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+function usarTokenDelModal(){
+  const raw = document.getElementById('modalTokenInput').value.trim();
+  if(!raw){ alert('Pegá el token primero.'); return; }
+  let token = raw;
+  try {
+    const obj = JSON.parse(raw);
+    if(obj.token) token = obj.token;
+    else if(obj.value){ const inner = JSON.parse(obj.value); if(inner.token) token = inner.token; }
+  } catch(e){}
+  document.getElementById('bearerInput').value = token;
+  try { localStorage.setItem(LS_TOKEN_KEY, token); } catch(e){}
+  setTokenStatus('saved','✓ Token guardado correctamente');
+  cerrarModal();
+}
+
+// ═══════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════
+function resetUI(){
+  document.getElementById('progressWrap').classList.remove('visible');
+  document.getElementById('resultOk').classList.remove('visible');
+  document.getElementById('logBox').innerHTML = '';
+  setProgress(0);
+  ['btnExcel','btnCsv'].forEach(id => { const b = document.getElementById(id); if(b) b.disabled=false; });
+  ['cancelExcel','cancelCsv'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('visible'); });
+}
+
+function log(msg, tipo='info'){
+  const box = document.getElementById('logBox');
+  const line = document.createElement('div');
+  line.className = `log-line ${tipo}`;
+  const ts = new Date().toLocaleTimeString('es-AR');
+  line.textContent = `[${ts}] ${msg}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+function setProgress(pct){ document.getElementById('progressFill').style.width = pct+'%'; }
+function showResult(msg){ const r = document.getElementById('resultOk'); r.textContent=msg; r.classList.add('visible'); }
+
+function getToken(){
+  const t = document.getElementById('bearerInput').value.trim();
+  if(!t){ alert('Ingresá el Bearer Token primero.'); return null; }
+  return t;
+}
+
+// ═══════════════════════════════════════════════════════
+//  FETCH CON RETRY
+// ═══════════════════════════════════════════════════════
+async function doFetch(url, token, asBlob=false, attempt=1){
+  const res = await fetch(url, { headers: { Authorization: 'Bearer '+token } });
+  if(res.status===401) throw new Error('401 — Token inválido o expirado');
+  if(!res.ok){
+    const transient = res.status>=500;
+    if(attempt<3 && transient){
+      await new Promise(r=>setTimeout(r,1000*attempt*2));
+      return doFetch(url, token, asBlob, attempt+1);
+    }
+    throw new Error('HTTP '+res.status);
+  }
+  return asBlob ? await res.blob() : await res.text();
+}
+
+// ═══════════════════════════════════════════════════════
+//  COLA CON CONCURRENCIA N
+// ═══════════════════════════════════════════════════════
+async function runQueue(items, worker, concurrency=3){
+  let idx=0; const running=new Set();
+  async function launchNext(){
+    if(cancelFlag||idx>=items.length) return;
+    const task=items[idx++];
+    const p=(async()=>{ await worker(task); })().finally(()=>running.delete(p));
+    running.add(p);
+    if(running.size<concurrency) launchNext();
+  }
+  for(let i=0;i<Math.min(concurrency,items.length);i++) launchNext();
+  while(running.size){ await Promise.race([...running]); if(idx<items.length&&!cancelFlag) launchNext(); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PANEL 0 — COMPROBANTES EXCEL
+// ═══════════════════════════════════════════════════════
+function cancelarExcel(){ cancelFlag=true; log('Cancelado por el usuario.','err'); }
+
+async function iniciarDescargaExcel(){
+  const token = getToken(); if(!token) return;
+  if(selExcel.size===0){ alert('Seleccioná al menos una Obra Social.'); return; }
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  if(!from||!to){ alert('Completá las fechas.'); return; }
+
+  const btn = document.getElementById('btnExcel');
+  btn.disabled = true;
+  document.getElementById('cancelExcel').classList.add('visible');
+  document.getElementById('progressWrap').classList.add('visible');
+  document.getElementById('logBox').innerHTML='';
+  document.getElementById('resultOk').classList.remove('visible');
+  setProgress(0);
+  cancelFlag = false;
+
+  const fromISO = `${from}T00:00:00.000Z`;
+  const toISO   = `${to}T23:59:59.999Z`;
+  const selArr  = [...selExcel].sort();
+  const total   = selArr.length;
+  let allRows=[], headers=null, ok=0, errors=[];
+
+  for(let idx=0; idx<selArr.length; idx++){
+    if(cancelFlag) break;
+    const os = OBRAS[selArr[idx]];
+    log(`Descargando ${os.nombre}...`,'info');
+    try {
+      const url = `${os.base}/api/Comprobantes/Excel/?creadoFrom=${fromISO}&creadoTo=${toISO}&gLiquidacionAreaId=${G_LIQ_AREA_ID}&pageNumber=0&pageSize=99999`;
+      const blob = await doFetch(url, token, true);
+      const ab   = await blob.arrayBuffer();
+      const wb   = XLSX.read(new Uint8Array(ab),{type:'array'});
+      const ws   = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      if(data.length<2){ log(`⚠ ${os.nombre} — Sin datos`,'info'); ok++; }
+      else {
+        if(!headers) headers=['Obra Social',...data[0]];
+        const filas = data.slice(1).map(r=>[os.nombre,...r]);
+        allRows = allRows.concat(filas);
+        ok++;
+        log(`✓ ${os.nombre} — ${filas.length} filas`,'ok');
+      }
+    } catch(e){
+      errors.push(os.nombre);
+      log(`✗ ${os.nombre} — ${e.message}`,'err');
+    }
+    setProgress(Math.round(((idx+1)/total)*100));
+  }
+
+  if(ok>0 && headers){
+    const ws  = XLSX.utils.aoa_to_sheet([headers,...allRows]);
+    const wb  = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Comprobantes');
+    const fromStr = from.replace(/-/g,'');
+    const toStr   = to.replace(/-/g,'');
+    const fname   = `Comprobantes_Area4_${fromStr}-${toStr}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    const msg = `✓ ${fname} · ${allRows.length} filas · ${ok}/${total} obras sociales`
+              + (errors.length ? ` · Errores: ${errors.join(', ')}` : '');
+    showResult(msg);
+    log(`Archivo generado: ${fname}`,'ok');
+  } else if(!cancelFlag){
+    log('Sin datos. Verificá token y CORS.','err');
+  }
+
+  btn.disabled=false;
+  document.getElementById('cancelExcel').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════════
+//  PANEL 1 — PEDIDOS CSV
+// ═══════════════════════════════════════════════════════
+function cancelarCsv(){ cancelFlag=true; log('Cancelado por el usuario.','err'); }
+
+// Genera lista de períodos (YYYYMM) para los años seleccionados,
+// excluyendo el mes actual (abierto)
+function getPeriodos(){
+  const now    = new Date();
+  const tzNow  = new Date(now.toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
+  const curY   = tzNow.getFullYear();
+  const curM   = tzNow.getMonth()+1; // 1-12
+  const periodos = [];
+  for(const year of [...selYears].sort()){
+    const lastMonth = (year < curY) ? 12 : curM-1;
+    for(let m=1; m<=lastMonth; m++){
+      periodos.push(`${year}${String(m).padStart(2,'0')}`);
+    }
+  }
+  return periodos;
+}
+
+function tipoToParams(tipo){
+  return {
+    aceptados:   'hasDevok=true',
+    rechazados:  'hasDevok=false&hasError=true',
+    noaceptados: 'hasDevok=false&hasError=false'
+  }[tipo];
+}
+
+function tzStamp(){
+  const tzNow = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
+  const pad=n=>String(n).padStart(2,'0');
+  return `${tzNow.getFullYear()}${pad(tzNow.getMonth()+1)}${pad(tzNow.getDate())}-${pad(tzNow.getHours())}${pad(tzNow.getMinutes())}`;
+}
+
+function downloadCsv(content, filename){
+  const blob = new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function iniciarDescargaCsv(){
+  const token = getToken(); if(!token) return;
+  if(selCsv.size===0){ alert('Seleccioná al menos una Obra Social.'); return; }
+  if(selYears.size===0){ alert('Seleccioná al menos un año.'); return; }
+
+  const periodos = getPeriodos();
+  if(periodos.length===0){ alert('No hay períodos cerrados para los años seleccionados.'); return; }
+
+  const tipo   = document.getElementById('tipoSelect').value;
+  const prueba = document.getElementById('modoPrueba').checked;
+
+  const obras_use   = prueba ? [OBRAS[[...selCsv][0]]] : [...selCsv].sort().map(i=>OBRAS[i]);
+  const periodos_use = prueba ? [periodos[0]] : periodos;
+
+  const targets = [];
+  for(const o of obras_use) for(const p of periodos_use) targets.push({obra:o,periodo:p});
+
+  const btn = document.getElementById('btnCsv');
+  btn.disabled=true;
+  document.getElementById('cancelCsv').classList.add('visible');
+  document.getElementById('progressWrap').classList.add('visible');
+  document.getElementById('logBox').innerHTML='';
+  document.getElementById('resultOk').classList.remove('visible');
+  setProgress(0);
+  cancelFlag=false;
+
+  const seen=new Set(), rows=[];
+  let header=null, done=0, errors=[];
+  const total=targets.length;
+
+  async function worker({obra,periodo}){
+    if(cancelFlag) return;
+    setProgress(Math.round(((done+1)/total)*100));
+    try {
+      const qs  = `${tipoToParams(tipo)}&pageNumber=0&pageSize=10`;
+      const url = `${obra.base}/api/IntegracionEnvioFtp/csv?periodoSss=${periodo}&${qs}`;
+      const csv = await doFetch(url, token, false);
+      const lines = csv.split(/\r?\n/).filter(l=>l.trim()!=='');
+      if(lines.length<2){ log(`⚠ ${obra.nombre} ${periodo} — Sin datos`,'info'); return; }
+      if(!header) header = `ObraSocial;TipoPedido;${lines[0]}`;
+      for(let i=1;i<lines.length;i++){
+        const row=`${obra.nombre};${tipo};${lines[i]}`;
+        if(!seen.has(row)){ seen.add(row); rows.push(row); }
+      }
+      log(`✓ ${obra.nombre} ${periodo} — ${lines.length-1} filas`,'ok');
+    } catch(e){
+      errors.push(`${obra.nombre} ${periodo}`);
+      log(`✗ ${obra.nombre} ${periodo} — ${e.message}`,'err');
+    } finally {
+      done++;
+      setProgress(Math.round((done/total)*100));
+    }
+  }
+
+  await runQueue(targets, worker, 3);
+
+  if(!header||rows.length===0){ if(!cancelFlag) log('Sin datos. Verificá token y CORS.','err'); btn.disabled=false; document.getElementById('cancelCsv').classList.remove('visible'); return; }
+
+  // Ordenar por período de prestación → ObraSocial
+  rows.sort((a,b)=>{
+    const as=a.split(';'), bs=b.split(';');
+    const h=header.split(';');
+    const idx=h.slice(2).findIndex(t=>t.trim().toLowerCase()==='integracionperiodoprestacion');
+    const ap=idx>=0?as[2+idx]:as[2], bp=idx>=0?bs[2+idx]:bs[2];
+    if(ap!==bp) return ap.localeCompare(bp);
+    return as[0].localeCompare(bs[0]);
+  });
+
+  const csvFinal = [header,...rows].join('\r\n');
+  const yearsStr = [...selYears].sort().join('-');
+  const fname    = `pedidos_${tipo}_${yearsStr}_all_obras_${tzStamp()}.csv`;
+  downloadCsv(csvFinal, fname);
+
+  const msg = `✓ ${fname} · ${rows.length} filas · ${periodos_use.length} períodos`
+            + (errors.length ? ` · Errores: ${errors.length}` : '');
+  showResult(msg);
+  log(`Archivo generado: ${fname}`,'ok');
+
+  btn.disabled=false;
+  document.getElementById('cancelCsv').classList.remove('visible');
+}
+</script>
+</body>
+</html>
