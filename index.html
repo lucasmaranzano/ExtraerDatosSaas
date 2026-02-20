@@ -15,6 +15,7 @@
     --accent:  #4fffb0;
     --accent2: #ff6b6b;
     --accent3: #93c5fd;
+    --yellow:  #fbbf24;
     --text:    #e8ecf0;
     --muted:   #6b7280;
     --mono:    'IBM Plex Mono', monospace;
@@ -46,12 +47,7 @@
     z-index: 0;
   }
 
-  .container {
-    width: 100%;
-    max-width: 680px;
-    position: relative;
-    z-index: 1;
-  }
+  .container { width: 100%; max-width: 680px; position: relative; z-index: 1; }
 
   /* ── HEADER ── */
   header { margin-bottom: 2rem; }
@@ -66,26 +62,14 @@
     padding: 0.2rem 0.6rem;
     margin-bottom: 0.75rem;
   }
-  h1 {
-    font-size: 2rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    color: var(--text);
-  }
+  h1 { font-size: 2rem; font-weight: 300; letter-spacing: -0.02em; line-height: 1.2; }
   h1 span { color: var(--accent); font-weight: 600; }
-  .subtitle {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
-  }
+  .subtitle { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
 
   /* ── MODE SELECTOR ── */
   .mode-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0;
     border: 1px solid var(--border);
     margin-bottom: 1rem;
     overflow: hidden;
@@ -109,20 +93,11 @@
   }
   .mode-btn:last-child { border-right: none; }
   .mode-btn .mode-icon { font-size: 1.2rem; }
-  .mode-btn.active {
-    background: rgba(79,255,176,0.08);
-    color: var(--accent);
-    border-bottom: 2px solid var(--accent);
-  }
+  .mode-btn.active { background: rgba(79,255,176,0.08); color: var(--accent); border-bottom: 2px solid var(--accent); }
   .mode-btn:hover:not(.active) { color: var(--text); background: var(--surface2); }
 
   /* ── CARDS ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 0.75rem;
-  }
+  .card { background: var(--surface); border: 1px solid var(--border); padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; }
   .card-label {
     font-family: var(--mono);
     font-size: 0.68rem;
@@ -134,14 +109,9 @@
   }
 
   /* ── TOKEN ── */
-  .token-status {
-    font-family: var(--mono);
-    font-size: 0.67rem;
-    margin-bottom: 0.45rem;
-    min-height: 0.9rem;
-  }
+  .token-status { font-family: var(--mono); font-size: 0.67rem; margin-bottom: 0.45rem; min-height: 0.9rem; }
   .token-status.saved   { color: var(--accent); }
-  .token-status.unsaved { color: #fbbf24; }
+  .token-status.unsaved { color: var(--yellow); }
 
   input[type="password"], input[type="text"], input[type="date"], textarea, select {
     width: 100%;
@@ -157,7 +127,6 @@
     -webkit-appearance: none;
   }
   input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-
   select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234fffb0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -167,12 +136,7 @@
   }
   select option { background: #1a1e2e; color: var(--text); }
 
-  .btn-row {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.6rem;
-    flex-wrap: wrap;
-  }
+  .btn-row { display: flex; gap: 0.5rem; margin-top: 0.6rem; flex-wrap: wrap; }
   .btn-sm {
     background: none;
     border: 1px solid var(--border);
@@ -186,56 +150,44 @@
   }
   .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ── OS GRID ── */
-  .os-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
+  /* ── WEBAPP URL ── */
+  .webapp-row { display: flex; gap: 0.5rem; align-items: stretch; margin-top: 0.5rem; }
+  .webapp-row input { flex: 1; }
+  .webapp-status {
+    font-family: var(--mono);
+    font-size: 0.67rem;
+    margin-top: 0.4rem;
+    min-height: 0.9rem;
   }
+  .webapp-status.ok  { color: var(--accent); }
+  .webapp-status.err { color: var(--accent2); }
+  .webapp-status.warn { color: var(--yellow); }
+
+  /* ── OS GRID ── */
+  .os-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.5rem; }
   .os-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
     padding: 0.45rem 0.7rem;
     border: 1px solid var(--border);
     background: var(--bg);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-size: 0.78rem;
-    user-select: none;
+    cursor: pointer; transition: all 0.15s;
+    font-size: 0.78rem; user-select: none;
   }
   .os-item:hover { border-color: var(--accent); }
   .os-item.active { border-color: var(--accent); background: rgba(79,255,176,0.05); }
   .os-item.active .dot { background: var(--accent); }
-  .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-    flex-shrink: 0;
-    transition: background 0.15s;
-  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.15s; }
 
   /* ── DATE ROW ── */
-  .date-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
+  .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
   input[type="date"] { color-scheme: dark; }
 
-  /* ── PANEL SECTIONS ── */
+  /* ── PANEL ── */
   .panel { display: none; }
   .panel.active { display: block; }
 
-  /* ── AÑOS GRID (para pedidos) ── */
-  .years-grid {
-    display: flex;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
-    flex-wrap: wrap;
-  }
+  /* ── AÑOS ── */
+  .years-grid { display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap; }
   .year-btn {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -249,26 +201,14 @@
   .year-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(79,255,176,0.06); }
   .year-btn:hover:not(.active) { border-color: var(--text); color: var(--text); }
 
-  /* ── MODE TEST ── */
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.6rem;
-  }
-  .checkbox-row input[type="checkbox"] {
-    width: auto;
-    accent-color: var(--accent);
-    cursor: pointer;
-  }
-  .checkbox-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--muted);
-    cursor: pointer;
-  }
+  /* ── CHECKBOX ── */
+  .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+  .checkbox-row input[type="checkbox"] { width: auto; accent-color: var(--accent); cursor: pointer; }
+  .checkbox-label { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); cursor: pointer; }
 
-  /* ── DOWNLOAD BUTTON ── */
+  /* ── ACTION BUTTONS ── */
+  .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem; }
+
   .btn-download {
     width: 100%;
     background: var(--accent);
@@ -276,17 +216,34 @@
     border: none;
     font-family: var(--mono);
     font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 1rem;
+    padding: 0.9rem 0.5rem;
     cursor: pointer;
     transition: all 0.2s;
-    margin-top: 0.25rem;
   }
   .btn-download:hover { background: #3de89a; }
-  .btn-download:disabled { background: var(--muted); cursor: not-allowed; }
-  .btn-download .btn-inner { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .btn-download:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.6; }
+  .btn-download .btn-inner { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+
+  .btn-sheets {
+    width: 100%;
+    background: none;
+    border: 1px solid #34a853;
+    color: #34a853;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.9rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-sheets:hover { background: rgba(52,168,83,0.1); }
+  .btn-sheets:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-sheets .btn-inner { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
 
   .btn-cancel {
     width: 100%;
@@ -309,6 +266,7 @@
   .progress-wrap.visible { display: block; }
   .progress-bar-bg { background: var(--border); height: 3px; width: 100%; overflow: hidden; margin-bottom: 0.75rem; }
   .progress-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+
   .log {
     font-family: var(--mono);
     font-size: 0.68rem;
@@ -323,6 +281,7 @@
   .log-line.ok   { color: var(--accent); }
   .log-line.err  { color: var(--accent2); }
   .log-line.info { color: var(--accent3); }
+  .log-line.warn { color: var(--yellow); }
 
   .result-ok {
     display: none;
@@ -337,37 +296,25 @@
   }
   .result-ok.visible { display: block; }
 
-  /* ── MODAL ── */
+  /* ── MODAL TOKEN ── */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.78);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.78); z-index: 100;
+    align-items: center; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal-box {
     background: var(--surface);
     border: 1px solid var(--accent);
-    padding: 1.5rem;
-    width: 90%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    position: relative;
-    z-index: 101;
+    padding: 1.5rem; width: 90%; max-width: 480px;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    position: relative; z-index: 101;
   }
   .modal-title {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--mono); font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--accent);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;
   }
   .modal-steps { display: flex; flex-direction: column; gap: 0.4rem; }
   .step { font-size: 0.78rem; color: var(--muted); display: flex; gap: 0.6rem; align-items: flex-start; line-height: 1.5; }
@@ -378,16 +325,15 @@
   .btn-open-site:hover { background: rgba(79,255,176,0.1); }
   .modal-box textarea { resize: vertical; min-height: 80px; }
   .modal-actions { display: flex; gap: 0.5rem; }
-  .btn-modal-ok { flex: 1; background: var(--accent); color: #0d0f14; border: none; font-family: var(--mono); font-weight: 600; font-size: 0.75rem; padding: 0.6rem; cursor: pointer; transition: all 0.2s; }
+  .btn-modal-ok { flex: 1; background: var(--accent); color: #0d0f14; border: none; font-family: var(--mono); font-weight: 600; font-size: 0.75rem; padding: 0.6rem; cursor: pointer; }
   .btn-modal-ok:hover { background: #3de89a; }
-  .btn-modal-cancel { background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.75rem; padding: 0.6rem 1rem; cursor: pointer; transition: all 0.2s; }
+  .btn-modal-cancel { background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.75rem; padding: 0.6rem 1rem; cursor: pointer; }
   .btn-modal-cancel:hover { border-color: var(--accent2); color: var(--accent2); }
 
   footer { margin-top: 2rem; font-family: var(--mono); font-size: 0.63rem; color: var(--muted); text-align: center; }
 </style>
 </head>
 <body>
-
 <div class="container">
 
   <!-- HEADER -->
@@ -409,17 +355,31 @@
     </div>
   </div>
 
+  <!-- GOOGLE SHEETS CARD -->
+  <div class="card">
+    <span class="card-label">Google Sheets — Web App URL</span>
+    <div class="webapp-row">
+      <input type="text" id="webappUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="onWebappInput()" />
+      <button class="btn-sm" onclick="guardarWebapp()" style="white-space:nowrap;">💾 Guardar</button>
+      <button class="btn-sm" onclick="testWebapp()" style="white-space:nowrap;">🔗 Test</button>
+    </div>
+    <div class="webapp-status" id="webappStatus">— Pegá la URL del Web App de Apps Script</div>
+    <div style="font-family:var(--mono);font-size:0.63rem;color:var(--muted);margin-top:0.5rem;">
+      ¿No tenés la URL? Descargá el archivo <strong style="color:var(--accent3)">GoogleAppsScript.js</strong> e instalalo en tu Sheet (instrucciones incluidas).
+    </div>
+  </div>
+
   <!-- MODE SELECTOR -->
   <div class="mode-selector">
     <button class="mode-btn active" id="modeBtn0" onclick="setMode(0)">
       <span class="mode-icon">📊</span>
       <span>Comprobantes Subidos</span>
-      <span style="font-size:0.6rem;opacity:.6;">Excel · todas las OS</span>
+      <span style="font-size:0.6rem;opacity:.6;">Excel → Sheets</span>
     </button>
     <button class="mode-btn" id="modeBtn1" onclick="setMode(1)">
       <span class="mode-icon">📋</span>
       <span>Pedido Integración SSS</span>
-      <span style="font-size:0.6rem;opacity:.6;">CSV · por período</span>
+      <span style="font-size:0.6rem;opacity:.6;">CSV → Sheets</span>
     </button>
   </div>
 
@@ -445,9 +405,14 @@
       </div>
     </div>
 
-    <button class="btn-download" id="btnExcel" onclick="iniciarDescargaExcel()">
-      <div class="btn-inner"><span>▼</span><span>Descargar Excel Unificado</span></div>
-    </button>
+    <div class="action-group">
+      <button class="btn-download" id="btnExcel" onclick="iniciarDescargaExcel(false)">
+        <div class="btn-inner"><span>▼</span><span>Descargar Excel</span></div>
+      </button>
+      <button class="btn-sheets" id="btnExcelSheets" onclick="iniciarDescargaExcel(true)">
+        <div class="btn-inner"><span>⬆</span><span>Enviar a Sheets</span></div>
+      </button>
+    </div>
     <button class="btn-cancel" id="cancelExcel" onclick="cancelarExcel()">✕ Cancelar</button>
 
   </div>
@@ -478,9 +443,14 @@
       </div>
     </div>
 
-    <button class="btn-download" id="btnCsv" onclick="iniciarDescargaCsv()">
-      <div class="btn-inner"><span>▼</span><span>Descargar CSV Pedidos</span></div>
-    </button>
+    <div class="action-group">
+      <button class="btn-download" id="btnCsv" onclick="iniciarDescargaCsv(false)">
+        <div class="btn-inner"><span>▼</span><span>Descargar CSV</span></div>
+      </button>
+      <button class="btn-sheets" id="btnCsvSheets" onclick="iniciarDescargaCsv(true)">
+        <div class="btn-inner"><span>⬆</span><span>Enviar a Sheets</span></div>
+      </button>
+    </div>
     <button class="btn-cancel" id="cancelCsv" onclick="cancelarCsv()">✕ Cancelar</button>
 
   </div>
@@ -492,7 +462,7 @@
   </div>
   <div class="result-ok" id="resultOk"></div>
 
-  <footer>gLiquidacionAreaId=4 · CORS required · localStorage token persistence</footer>
+  <footer>gLiquidacionAreaId=4 · CORS required · localStorage persistence</footer>
 </div>
 
 <!-- MODAL TOKEN -->
@@ -516,9 +486,9 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  CONSTANTES
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 const OBRAS = [
   {nombre:"Cobertura de Salud", base:"https://coberturasalud.client-api.saas.com.ar"},
   {nombre:"OSMISS",             base:"https://osmiss.client-api.saas.com.ar"},
@@ -527,53 +497,53 @@ const OBRAS = [
   {nombre:"OSSIMRA",            base:"https://ossimra.client-api.saas.com.ar"},
   {nombre:"OSCONARA",           base:"https://osconara.client-api.saas.com.ar"},
 ];
-const G_LIQ_AREA_ID  = 4;
-const LS_TOKEN_KEY   = 'comprobantes_bearer_token';
-const CURRENT_YEAR   = new Date().getFullYear();
-const YEARS_DISPLAY  = [CURRENT_YEAR - 1, CURRENT_YEAR]; // 2025, 2026
+const G_LIQ_AREA_ID = 4;
+const LS_TOKEN_KEY  = 'comprobantes_bearer_token';
+const LS_WEBAPP_KEY = 'saas_webapp_url';
+const CURRENT_YEAR  = new Date().getFullYear();
+const YEARS_DISPLAY = [CURRENT_YEAR - 1, CURRENT_YEAR];
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  ESTADO
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 let selExcel   = new Set(OBRAS.map((_,i)=>i));
 let selCsv     = new Set(OBRAS.map((_,i)=>i));
-let selYears   = new Set(YEARS_DISPLAY);  // ambos por defecto
-let abortCtrl  = null;
+let selYears   = new Set(YEARS_DISPLAY);
 let cancelFlag = false;
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 (function init(){
   buildOsGrid('osGridExcel', selExcel);
   buildOsGrid('osGridCsv',   selCsv);
   buildYearsGrid();
   setDateDefaults();
   cargarTokenGuardado();
+  cargarWebappGuardada();
 })();
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  MODE TOGGLE
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function setMode(idx){
-  [0,1].forEach(i => {
-    document.getElementById(`panel${i}`).classList.toggle('active', i===idx);
-    document.getElementById(`modeBtn${i}`).classList.toggle('active', i===idx);
+  [0,1].forEach(i=>{
+    document.getElementById(`panel${i}`).classList.toggle('active',i===idx);
+    document.getElementById(`modeBtn${i}`).classList.toggle('active',i===idx);
   });
   resetUI();
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  OS GRIDS
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function buildOsGrid(containerId, selSet){
-  const grid = document.getElementById(containerId);
-  OBRAS.forEach((os, i) => {
-    const el = document.createElement('div');
-    el.className = 'os-item active';
-    el.id = `${containerId}-${i}`;
-    el.innerHTML = `<div class="dot"></div><span>${os.nombre}</span>`;
-    el.onclick = () => {
+  const grid=document.getElementById(containerId);
+  OBRAS.forEach((os,i)=>{
+    const el=document.createElement('div');
+    el.className='os-item active';
+    el.innerHTML=`<div class="dot"></div><span>${os.nombre}</span>`;
+    el.onclick=()=>{
       if(selSet.has(i)){ selSet.delete(i); el.classList.remove('active'); }
       else             { selSet.add(i);    el.classList.add('active'); }
     };
@@ -581,17 +551,16 @@ function buildOsGrid(containerId, selSet){
   });
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  YEARS GRID
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function buildYearsGrid(){
-  const grid = document.getElementById('yearsGrid');
-  YEARS_DISPLAY.forEach(y => {
-    const btn = document.createElement('button');
-    btn.className = 'year-btn active';
-    btn.textContent = y;
-    btn.dataset.year = y;
-    btn.onclick = () => {
+  const grid=document.getElementById('yearsGrid');
+  YEARS_DISPLAY.forEach(y=>{
+    const btn=document.createElement('button');
+    btn.className='year-btn active';
+    btn.textContent=y;
+    btn.onclick=()=>{
       if(selYears.has(y)){ selYears.delete(y); btn.classList.remove('active'); }
       else               { selYears.add(y);    btn.classList.add('active'); }
     };
@@ -599,268 +568,322 @@ function buildYearsGrid(){
   });
 }
 
-// ═══════════════════════════════════════════════════════
-//  FECHAS DEFAULT: hoy-6m → hoy
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  FECHAS DEFAULT
+// ═══════════════════════════════════════════════════
 function setDateDefaults(){
-  const pad = n => String(n).padStart(2,'0');
-  const hoy   = new Date();
-  const desde = new Date(hoy);
-  desde.setMonth(desde.getMonth() - 6);
-  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  document.getElementById('dateFrom').value = fmt(desde);
-  document.getElementById('dateTo').value   = fmt(hoy);
+  const pad=n=>String(n).padStart(2,'0');
+  const hoy=new Date(), desde=new Date(hoy);
+  desde.setMonth(desde.getMonth()-6);
+  const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  document.getElementById('dateFrom').value=fmt(desde);
+  document.getElementById('dateTo').value=fmt(hoy);
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  TOKEN
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function cargarTokenGuardado(){
   try {
-    const saved = localStorage.getItem(LS_TOKEN_KEY);
-    if(saved){ document.getElementById('bearerInput').value = saved; setTokenStatus('saved','✓ Token guardado cargado'); }
-    else       { setTokenStatus('unsaved','— Sin token guardado'); }
-  } catch(e){}
+    const s=localStorage.getItem(LS_TOKEN_KEY);
+    if(s){ document.getElementById('bearerInput').value=s; setTokenStatus('saved','✓ Token guardado cargado'); }
+    else { setTokenStatus('unsaved','— Sin token guardado'); }
+  }catch(e){}
 }
 function guardarToken(){
-  const t = document.getElementById('bearerInput').value.trim();
+  const t=document.getElementById('bearerInput').value.trim();
   if(!t){ alert('No hay token para guardar.'); return; }
-  try { localStorage.setItem(LS_TOKEN_KEY, t); setTokenStatus('saved','✓ Token guardado correctamente'); }
-  catch(e){ alert('No se pudo guardar: '+e.message); }
+  try{ localStorage.setItem(LS_TOKEN_KEY,t); setTokenStatus('saved','✓ Token guardado'); }catch(e){}
 }
-function setTokenStatus(tipo, msg){
-  const el = document.getElementById('tokenStatus');
-  el.textContent = msg; el.className = `token-status ${tipo}`;
+function setTokenStatus(tipo,msg){
+  const el=document.getElementById('tokenStatus');
+  el.textContent=msg; el.className=`token-status ${tipo}`;
 }
 function onTokenInput(){
-  const val = document.getElementById('bearerInput').value.trim();
-  try {
-    const saved = localStorage.getItem(LS_TOKEN_KEY);
-    if(!val) setTokenStatus('unsaved','— Sin token');
-    else if(saved && val===saved) setTokenStatus('saved','✓ Coincide con el guardado');
+  const v=document.getElementById('bearerInput').value.trim();
+  try{
+    const s=localStorage.getItem(LS_TOKEN_KEY);
+    if(!v) setTokenStatus('unsaved','— Sin token');
+    else if(s&&v===s) setTokenStatus('saved','✓ Coincide con el guardado');
     else setTokenStatus('unsaved','⚠ Token modificado — no guardado');
-  } catch(e){}
+  }catch(e){}
 }
 function toggleVis(){
-  const inp = document.getElementById('bearerInput');
-  inp.type = inp.type==='password'?'text':'password';
+  const i=document.getElementById('bearerInput');
+  i.type=i.type==='password'?'text':'password';
 }
 function abrirPopupToken(){ document.getElementById('modalOverlay').classList.add('open'); document.getElementById('modalTokenInput').value=''; }
 function cerrarModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
 function usarTokenDelModal(){
-  const raw = document.getElementById('modalTokenInput').value.trim();
+  const raw=document.getElementById('modalTokenInput').value.trim();
   if(!raw){ alert('Pegá el token primero.'); return; }
-  let token = raw;
-  try {
-    const obj = JSON.parse(raw);
-    if(obj.token) token = obj.token;
-    else if(obj.value){ const inner = JSON.parse(obj.value); if(inner.token) token = inner.token; }
-  } catch(e){}
-  document.getElementById('bearerInput').value = token;
-  try { localStorage.setItem(LS_TOKEN_KEY, token); } catch(e){}
-  setTokenStatus('saved','✓ Token guardado correctamente');
+  let token=raw;
+  try{
+    const obj=JSON.parse(raw);
+    if(obj.token) token=obj.token;
+    else if(obj.value){ const inner=JSON.parse(obj.value); if(inner.token) token=inner.token; }
+  }catch(e){}
+  document.getElementById('bearerInput').value=token;
+  try{ localStorage.setItem(LS_TOKEN_KEY,token); }catch(e){}
+  setTokenStatus('saved','✓ Token guardado');
   cerrarModal();
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  WEBAPP URL
+// ═══════════════════════════════════════════════════
+function cargarWebappGuardada(){
+  try{
+    const u=localStorage.getItem(LS_WEBAPP_KEY);
+    if(u){ document.getElementById('webappUrl').value=u; setWebappStatus('ok','✓ URL guardada cargada'); }
+  }catch(e){}
+}
+function guardarWebapp(){
+  const u=document.getElementById('webappUrl').value.trim();
+  if(!u){ alert('No hay URL para guardar.'); return; }
+  try{ localStorage.setItem(LS_WEBAPP_KEY,u); setWebappStatus('ok','✓ URL guardada'); }catch(e){}
+}
+function onWebappInput(){
+  const v=document.getElementById('webappUrl').value.trim();
+  if(!v) setWebappStatus('warn','— Sin URL');
+  else   setWebappStatus('warn','⚠ URL modificada — no guardada');
+}
+function setWebappStatus(tipo,msg){
+  const el=document.getElementById('webappStatus');
+  el.textContent=msg; el.className=`webapp-status ${tipo}`;
+}
+async function testWebapp(){
+  const url=document.getElementById('webappUrl').value.trim();
+  if(!url){ alert('Ingresá la URL primero.'); return; }
+  setWebappStatus('warn','⏳ Probando conexión...');
+  try{
+    const r=await fetch(url);
+    const j=await r.json();
+    if(j.status==='activo'||j.hojas) setWebappStatus('ok','✓ Conexión OK — Web App activa');
+    else setWebappStatus('err','⚠ Respuesta inesperada: '+JSON.stringify(j));
+  }catch(e){
+    setWebappStatus('err','✗ Error: '+e.message);
+  }
+}
+function getWebappUrl(){
+  const u=(document.getElementById('webappUrl').value||'').trim();
+  if(!u){ alert('Configurá la URL de Google Sheets Web App primero.'); return null; }
+  return u;
+}
+
+// ═══════════════════════════════════════════════════
 //  UI HELPERS
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function resetUI(){
   document.getElementById('progressWrap').classList.remove('visible');
   document.getElementById('resultOk').classList.remove('visible');
-  document.getElementById('logBox').innerHTML = '';
+  document.getElementById('logBox').innerHTML='';
   setProgress(0);
-  ['btnExcel','btnCsv'].forEach(id => { const b = document.getElementById(id); if(b) b.disabled=false; });
-  ['cancelExcel','cancelCsv'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('visible'); });
 }
-
-function log(msg, tipo='info'){
-  const box = document.getElementById('logBox');
-  const line = document.createElement('div');
-  line.className = `log-line ${tipo}`;
-  const ts = new Date().toLocaleTimeString('es-AR');
-  line.textContent = `[${ts}] ${msg}`;
+function log(msg,tipo='info'){
+  const box=document.getElementById('logBox');
+  const line=document.createElement('div');
+  line.className=`log-line ${tipo}`;
+  const ts=new Date().toLocaleTimeString('es-AR');
+  line.textContent=`[${ts}] ${msg}`;
   box.appendChild(line);
-  box.scrollTop = box.scrollHeight;
+  box.scrollTop=box.scrollHeight;
 }
-function setProgress(pct){ document.getElementById('progressFill').style.width = pct+'%'; }
-function showResult(msg){ const r = document.getElementById('resultOk'); r.textContent=msg; r.classList.add('visible'); }
-
+function setProgress(pct){ document.getElementById('progressFill').style.width=pct+'%'; }
+function showResult(msg){ const r=document.getElementById('resultOk'); r.textContent=msg; r.classList.add('visible'); }
 function getToken(){
-  const t = document.getElementById('bearerInput').value.trim();
+  const t=document.getElementById('bearerInput').value.trim();
   if(!t){ alert('Ingresá el Bearer Token primero.'); return null; }
   return t;
 }
+function setBtns(disabled){
+  ['btnExcel','btnExcelSheets','btnCsv','btnCsvSheets'].forEach(id=>{
+    const b=document.getElementById(id); if(b) b.disabled=disabled;
+  });
+}
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  FETCH CON RETRY
-// ═══════════════════════════════════════════════════════
-async function doFetch(url, token, asBlob=false, attempt=1){
-  const res = await fetch(url, { headers: { Authorization: 'Bearer '+token } });
+// ═══════════════════════════════════════════════════
+async function doFetch(url,token,asBlob=false,attempt=1){
+  const res=await fetch(url,{headers:{Authorization:'Bearer '+token}});
   if(res.status===401) throw new Error('401 — Token inválido o expirado');
   if(!res.ok){
-    const transient = res.status>=500;
-    if(attempt<3 && transient){
+    if(attempt<3&&res.status>=500){
       await new Promise(r=>setTimeout(r,1000*attempt*2));
-      return doFetch(url, token, asBlob, attempt+1);
+      return doFetch(url,token,asBlob,attempt+1);
     }
     throw new Error('HTTP '+res.status);
   }
-  return asBlob ? await res.blob() : await res.text();
+  return asBlob?await res.blob():await res.text();
 }
 
-// ═══════════════════════════════════════════════════════
-//  COLA CON CONCURRENCIA N
-// ═══════════════════════════════════════════════════════
-async function runQueue(items, worker, concurrency=3){
+// ═══════════════════════════════════════════════════
+//  COLA CON CONCURRENCIA
+// ═══════════════════════════════════════════════════
+async function runQueue(items,worker,concurrency=3){
   let idx=0; const running=new Set();
-  async function launchNext(){
+  async function next(){
     if(cancelFlag||idx>=items.length) return;
     const task=items[idx++];
-    const p=(async()=>{ await worker(task); })().finally(()=>running.delete(p));
+    const p=(async()=>await worker(task))().finally(()=>running.delete(p));
     running.add(p);
-    if(running.size<concurrency) launchNext();
+    if(running.size<concurrency) next();
   }
-  for(let i=0;i<Math.min(concurrency,items.length);i++) launchNext();
-  while(running.size){ await Promise.race([...running]); if(idx<items.length&&!cancelFlag) launchNext(); }
+  for(let i=0;i<Math.min(concurrency,items.length);i++) next();
+  while(running.size){ await Promise.race([...running]); if(idx<items.length&&!cancelFlag) next(); }
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  ENVIAR A GOOGLE SHEETS
+// ═══════════════════════════════════════════════════
+async function enviarASheets(sheetKey, headers, rows){
+  const webappUrl=getWebappUrl(); if(!webappUrl) return false;
+  log(`⬆ Enviando ${rows.length} filas a Sheets → hoja "${sheetKey}"...`,'info');
+  const res=await fetch(webappUrl,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain'},  // evita preflight CORS
+    body:JSON.stringify({sheetKey,headers,rows})
+  });
+  const json=await res.json();
+  if(json.error) throw new Error(json.error);
+  log(`✓ Sheets actualizado: "${json.hoja}" — ${json.filas} filas`,'ok');
+  return true;
+}
+
+// ═══════════════════════════════════════════════════
 //  PANEL 0 — COMPROBANTES EXCEL
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function cancelarExcel(){ cancelFlag=true; log('Cancelado por el usuario.','err'); }
 
-async function iniciarDescargaExcel(){
-  const token = getToken(); if(!token) return;
+async function iniciarDescargaExcel(modoSheets){
+  const token=getToken(); if(!token) return;
+  if(modoSheets&&!getWebappUrl()) return;
   if(selExcel.size===0){ alert('Seleccioná al menos una Obra Social.'); return; }
-  const from = document.getElementById('dateFrom').value;
-  const to   = document.getElementById('dateTo').value;
+  const from=document.getElementById('dateFrom').value;
+  const to=document.getElementById('dateTo').value;
   if(!from||!to){ alert('Completá las fechas.'); return; }
 
-  const btn = document.getElementById('btnExcel');
-  btn.disabled = true;
+  setBtns(true);
   document.getElementById('cancelExcel').classList.add('visible');
   document.getElementById('progressWrap').classList.add('visible');
   document.getElementById('logBox').innerHTML='';
   document.getElementById('resultOk').classList.remove('visible');
   setProgress(0);
-  cancelFlag = false;
+  cancelFlag=false;
 
-  const fromISO = `${from}T00:00:00.000Z`;
-  const toISO   = `${to}T23:59:59.999Z`;
-  const selArr  = [...selExcel].sort();
-  const total   = selArr.length;
-  let allRows=[], headers=null, ok=0, errors=[];
+  const fromISO=`${from}T00:00:00.000Z`;
+  const toISO=`${to}T23:59:59.999Z`;
+  const selArr=[...selExcel].sort();
+  const total=selArr.length;
+  let allRows=[],headers=null,ok=0,errors=[];
 
-  for(let idx=0; idx<selArr.length; idx++){
+  for(let idx=0;idx<selArr.length;idx++){
     if(cancelFlag) break;
-    const os = OBRAS[selArr[idx]];
+    const os=OBRAS[selArr[idx]];
     log(`Descargando ${os.nombre}...`,'info');
-    try {
-      const url = `${os.base}/api/Comprobantes/Excel/?creadoFrom=${fromISO}&creadoTo=${toISO}&gLiquidacionAreaId=${G_LIQ_AREA_ID}&pageNumber=0&pageSize=99999`;
-      const blob = await doFetch(url, token, true);
-      const ab   = await blob.arrayBuffer();
-      const wb   = XLSX.read(new Uint8Array(ab),{type:'array'});
-      const ws   = wb.Sheets[wb.SheetNames[0]];
-      const data = XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    try{
+      const url=`${os.base}/api/Comprobantes/Excel/?creadoFrom=${fromISO}&creadoTo=${toISO}&gLiquidacionAreaId=${G_LIQ_AREA_ID}&pageNumber=0&pageSize=99999`;
+      const blob=await doFetch(url,token,true);
+      const ab=await blob.arrayBuffer();
+      const wb=XLSX.read(new Uint8Array(ab),{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
       if(data.length<2){ log(`⚠ ${os.nombre} — Sin datos`,'info'); ok++; }
-      else {
+      else{
         if(!headers) headers=['Obra Social',...data[0]];
-        const filas = data.slice(1).map(r=>[os.nombre,...r]);
-        allRows = allRows.concat(filas);
+        const filas=data.slice(1).map(r=>[os.nombre,...r]);
+        allRows=allRows.concat(filas);
         ok++;
         log(`✓ ${os.nombre} — ${filas.length} filas`,'ok');
       }
-    } catch(e){
+    }catch(e){
       errors.push(os.nombre);
       log(`✗ ${os.nombre} — ${e.message}`,'err');
     }
     setProgress(Math.round(((idx+1)/total)*100));
   }
 
-  if(ok>0 && headers){
-    const ws  = XLSX.utils.aoa_to_sheet([headers,...allRows]);
-    const wb  = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Comprobantes');
-    const fromStr = from.replace(/-/g,'');
-    const toStr   = to.replace(/-/g,'');
-    const fname   = `Comprobantes_Area4_${fromStr}-${toStr}.xlsx`;
-    XLSX.writeFile(wb, fname);
-    const msg = `✓ ${fname} · ${allRows.length} filas · ${ok}/${total} obras sociales`
-              + (errors.length ? ` · Errores: ${errors.join(', ')}` : '');
-    showResult(msg);
-    log(`Archivo generado: ${fname}`,'ok');
+  if(ok>0&&headers){
+    if(modoSheets){
+      // Convertir valores a strings simples para evitar problemas de serialización
+      const rowsStr=allRows.map(r=>r.map(c=>c===null||c===undefined?'':String(c)));
+      try{
+        await enviarASheets('COMPROBANTES SUBIDOS',headers.map(String),rowsStr);
+        showResult(`✓ Google Sheets actualizado — ${allRows.length} filas · ${ok}/${total} obras sociales`+(errors.length?` · Errores: ${errors.join(', ')}`:''));
+      }catch(e){
+        log(`✗ Error enviando a Sheets: ${e.message}`,'err');
+      }
+    } else {
+      const ws=XLSX.utils.aoa_to_sheet([headers,...allRows]);
+      const wb=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb,ws,'Comprobantes');
+      const fromStr=from.replace(/-/g,'');
+      const toStr=to.replace(/-/g,'');
+      const fname=`Comprobantes_Area4_${fromStr}-${toStr}.xlsx`;
+      XLSX.writeFile(wb,fname);
+      showResult(`✓ ${fname} · ${allRows.length} filas · ${ok}/${total} obras`+(errors.length?` · Errores: ${errors.join(', ')}`:''));
+      log(`Archivo generado: ${fname}`,'ok');
+    }
   } else if(!cancelFlag){
     log('Sin datos. Verificá token y CORS.','err');
   }
 
-  btn.disabled=false;
+  setBtns(false);
   document.getElementById('cancelExcel').classList.remove('visible');
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  PANEL 1 — PEDIDOS CSV
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function cancelarCsv(){ cancelFlag=true; log('Cancelado por el usuario.','err'); }
 
-// Genera lista de períodos (YYYYMM) para los años seleccionados,
-// excluyendo el mes actual (abierto)
 function getPeriodos(){
-  const now    = new Date();
-  const tzNow  = new Date(now.toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
-  const curY   = tzNow.getFullYear();
-  const curM   = tzNow.getMonth()+1; // 1-12
-  const periodos = [];
+  const tzNow=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
+  const curY=tzNow.getFullYear(), curM=tzNow.getMonth()+1;
+  const periodos=[];
   for(const year of [...selYears].sort()){
-    const lastMonth = (year < curY) ? 12 : curM-1;
-    for(let m=1; m<=lastMonth; m++){
-      periodos.push(`${year}${String(m).padStart(2,'0')}`);
-    }
+    const last=year<curY?12:curM-1;
+    for(let m=1;m<=last;m++) periodos.push(`${year}${String(m).padStart(2,'0')}`);
   }
   return periodos;
 }
 
 function tipoToParams(tipo){
-  return {
-    aceptados:   'hasDevok=true',
-    rechazados:  'hasDevok=false&hasError=true',
-    noaceptados: 'hasDevok=false&hasError=false'
-  }[tipo];
+  return {aceptados:'hasDevok=true',rechazados:'hasDevok=false&hasError=true',noaceptados:'hasDevok=false&hasError=false'}[tipo];
 }
 
 function tzStamp(){
-  const tzNow = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
-  const pad=n=>String(n).padStart(2,'0');
-  return `${tzNow.getFullYear()}${pad(tzNow.getMonth()+1)}${pad(tzNow.getDate())}-${pad(tzNow.getHours())}${pad(tzNow.getMinutes())}`;
+  const tz=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
+  const p=n=>String(n).padStart(2,'0');
+  return `${tz.getFullYear()}${p(tz.getMonth()+1)}${p(tz.getDate())}-${p(tz.getHours())}${p(tz.getMinutes())}`;
 }
 
-function downloadCsv(content, filename){
-  const blob = new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
+function downloadCsv(content,filename){
+  const blob=new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
   a.href=url; a.download=filename; a.click();
   URL.revokeObjectURL(url);
 }
 
-async function iniciarDescargaCsv(){
-  const token = getToken(); if(!token) return;
+async function iniciarDescargaCsv(modoSheets){
+  const token=getToken(); if(!token) return;
+  if(modoSheets&&!getWebappUrl()) return;
   if(selCsv.size===0){ alert('Seleccioná al menos una Obra Social.'); return; }
   if(selYears.size===0){ alert('Seleccioná al menos un año.'); return; }
 
-  const periodos = getPeriodos();
+  const periodos=getPeriodos();
   if(periodos.length===0){ alert('No hay períodos cerrados para los años seleccionados.'); return; }
 
-  const tipo   = document.getElementById('tipoSelect').value;
-  const prueba = document.getElementById('modoPrueba').checked;
-
-  const obras_use   = prueba ? [OBRAS[[...selCsv][0]]] : [...selCsv].sort().map(i=>OBRAS[i]);
-  const periodos_use = prueba ? [periodos[0]] : periodos;
-
-  const targets = [];
+  const tipo=document.getElementById('tipoSelect').value;
+  const prueba=document.getElementById('modoPrueba').checked;
+  const obras_use=prueba?[OBRAS[[...selCsv][0]]]:[...selCsv].sort().map(i=>OBRAS[i]);
+  const periodos_use=prueba?[periodos[0]]:periodos;
+  const targets=[];
   for(const o of obras_use) for(const p of periodos_use) targets.push({obra:o,periodo:p});
 
-  const btn = document.getElementById('btnCsv');
-  btn.disabled=true;
+  setBtns(true);
   document.getElementById('cancelCsv').classList.add('visible');
   document.getElementById('progressWrap').classList.add('visible');
   document.getElementById('logBox').innerHTML='';
@@ -868,59 +891,71 @@ async function iniciarDescargaCsv(){
   setProgress(0);
   cancelFlag=false;
 
-  const seen=new Set(), rows=[];
-  let header=null, done=0, errors=[];
+  // Recolectar datos: guardamos como arrays para poder enviar a Sheets
+  const seen=new Set();
+  let headerArr=null;   // array de columnas
+  const rowsArr=[];     // array de arrays
+  let done=0, errors=[];
   const total=targets.length;
 
   async function worker({obra,periodo}){
     if(cancelFlag) return;
-    setProgress(Math.round(((done+1)/total)*100));
-    try {
-      const qs  = `${tipoToParams(tipo)}&pageNumber=0&pageSize=10`;
-      const url = `${obra.base}/api/IntegracionEnvioFtp/csv?periodoSss=${periodo}&${qs}`;
-      const csv = await doFetch(url, token, false);
-      const lines = csv.split(/\r?\n/).filter(l=>l.trim()!=='');
+    try{
+      const qs=`${tipoToParams(tipo)}&pageNumber=0&pageSize=10`;
+      const url=`${obra.base}/api/IntegracionEnvioFtp/csv?periodoSss=${periodo}&${qs}`;
+      const csv=await doFetch(url,token,false);
+      const lines=csv.split(/\r?\n/).filter(l=>l.trim()!=='');
       if(lines.length<2){ log(`⚠ ${obra.nombre} ${periodo} — Sin datos`,'info'); return; }
-      if(!header) header = `ObraSocial;TipoPedido;${lines[0]}`;
+      if(!headerArr) headerArr=['ObraSocial','TipoPedido',...lines[0].split(';')];
       for(let i=1;i<lines.length;i++){
-        const row=`${obra.nombre};${tipo};${lines[i]}`;
-        if(!seen.has(row)){ seen.add(row); rows.push(row); }
+        const key=`${obra.nombre}|${periodo}|${lines[i]}`;
+        if(!seen.has(key)){
+          seen.add(key);
+          rowsArr.push([obra.nombre,tipo,...lines[i].split(';')]);
+        }
       }
       log(`✓ ${obra.nombre} ${periodo} — ${lines.length-1} filas`,'ok');
-    } catch(e){
+    }catch(e){
       errors.push(`${obra.nombre} ${periodo}`);
       log(`✗ ${obra.nombre} ${periodo} — ${e.message}`,'err');
-    } finally {
+    }finally{
       done++;
       setProgress(Math.round((done/total)*100));
     }
   }
 
-  await runQueue(targets, worker, 3);
+  await runQueue(targets,worker,3);
 
-  if(!header||rows.length===0){ if(!cancelFlag) log('Sin datos. Verificá token y CORS.','err'); btn.disabled=false; document.getElementById('cancelCsv').classList.remove('visible'); return; }
+  if(!headerArr||rowsArr.length===0){ if(!cancelFlag) log('Sin datos. Verificá token y CORS.','err'); setBtns(false); document.getElementById('cancelCsv').classList.remove('visible'); return; }
 
   // Ordenar por período de prestación → ObraSocial
-  rows.sort((a,b)=>{
-    const as=a.split(';'), bs=b.split(';');
-    const h=header.split(';');
-    const idx=h.slice(2).findIndex(t=>t.trim().toLowerCase()==='integracionperiodoprestacion');
-    const ap=idx>=0?as[2+idx]:as[2], bp=idx>=0?bs[2+idx]:bs[2];
-    if(ap!==bp) return ap.localeCompare(bp);
-    return as[0].localeCompare(bs[0]);
+  const periodoIdx=headerArr.findIndex(h=>h.trim().toLowerCase()==='integracionperiodoprestacion');
+  rowsArr.sort((a,b)=>{
+    const ap=periodoIdx>=0?a[periodoIdx]:a[2];
+    const bp=periodoIdx>=0?b[periodoIdx]:b[2];
+    if(ap!==bp) return String(ap).localeCompare(String(bp));
+    return String(a[0]).localeCompare(String(b[0]));
   });
 
-  const csvFinal = [header,...rows].join('\r\n');
-  const yearsStr = [...selYears].sort().join('-');
-  const fname    = `pedidos_${tipo}_${yearsStr}_all_obras_${tzStamp()}.csv`;
-  downloadCsv(csvFinal, fname);
+  if(modoSheets){
+    try{
+      await enviarASheets(tipo,headerArr,rowsArr.map(r=>r.map(c=>String(c??''))));
+      const yearsStr=[...selYears].sort().join('-');
+      showResult(`✓ Google Sheets actualizado — hoja "${tipo.toUpperCase()}" · ${rowsArr.length} filas · ${yearsStr}`+(errors.length?` · Errores: ${errors.length}`:''));
+    }catch(e){
+      log(`✗ Error enviando a Sheets: ${e.message}`,'err');
+    }
+  } else {
+    // Reconstruir CSV desde arrays
+    const csvLines=[headerArr.join(';'),...rowsArr.map(r=>r.join(';'))];
+    const yearsStr=[...selYears].sort().join('-');
+    const fname=`pedidos_${tipo}_${yearsStr}_all_obras_${tzStamp()}.csv`;
+    downloadCsv(csvLines.join('\r\n'),fname);
+    showResult(`✓ ${fname} · ${rowsArr.length} filas`+(errors.length?` · Errores: ${errors.length}`:''));
+    log(`Archivo generado: ${fname}`,'ok');
+  }
 
-  const msg = `✓ ${fname} · ${rows.length} filas · ${periodos_use.length} períodos`
-            + (errors.length ? ` · Errores: ${errors.length}` : '');
-  showResult(msg);
-  log(`Archivo generado: ${fname}`,'ok');
-
-  btn.disabled=false;
+  setBtns(false);
   document.getElementById('cancelCsv').classList.remove('visible');
 }
 </script>
