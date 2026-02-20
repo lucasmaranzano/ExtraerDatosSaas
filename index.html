@@ -390,14 +390,12 @@
 
 <div class="container">
 
-  <!-- HEADER -->
   <header>
     <div class="badge">SAAS · Área 4 · Integración</div>
-    <h1>Centro de<br><span>Descargas</span></h1>
+    <h1>Centro de<br><span>Envío a Sheets</span></h1>
     <p class="subtitle">// gLiquidacionAreaId=4 · Token Bearer requerido</p>
   </header>
 
-  <!-- TOKEN CARD -->
   <div class="card">
     <span class="card-label">Bearer Token</span>
     <div class="token-status" id="tokenStatus"></div>
@@ -409,21 +407,19 @@
     </div>
   </div>
 
-  <!-- MODE SELECTOR -->
   <div class="mode-selector">
     <button class="mode-btn active" id="modeBtn0" onclick="setMode(0)">
       <span class="mode-icon">📊</span>
       <span>Comprobantes Subidos</span>
-      <span style="font-size:0.6rem;opacity:.6;">Excel · todas las OS</span>
+      <span style="font-size:0.6rem;opacity:.6;">Hoja: COMPROBANTES SUBIDOS</span>
     </button>
     <button class="mode-btn" id="modeBtn1" onclick="setMode(1)">
       <span class="mode-icon">📋</span>
       <span>Pedido Integración SSS</span>
-      <span style="font-size:0.6rem;opacity:.6;">CSV · por período</span>
+      <span style="font-size:0.6rem;opacity:.6;">Hojas: Aceptados / Rechazados</span>
     </button>
   </div>
 
-  <!-- ── PANEL 0: COMPROBANTES EXCEL ── -->
   <div class="panel active" id="panel0">
 
     <div class="card">
@@ -446,13 +442,12 @@
     </div>
 
     <button class="btn-download" id="btnExcel" onclick="iniciarDescargaExcel()">
-      <div class="btn-inner"><span>▼</span><span>Descargar Excel Unificado</span></div>
+      <div class="btn-inner"><span>🚀</span><span>Enviar Excel a Sheets</span></div>
     </button>
     <button class="btn-cancel" id="cancelExcel" onclick="cancelarExcel()">✕ Cancelar</button>
 
   </div>
 
-  <!-- ── PANEL 1: PEDIDOS CSV ── -->
   <div class="panel" id="panel1">
 
     <div class="card">
@@ -479,13 +474,12 @@
     </div>
 
     <button class="btn-download" id="btnCsv" onclick="iniciarDescargaCsv()">
-      <div class="btn-inner"><span>▼</span><span>Descargar CSV Pedidos</span></div>
+      <div class="btn-inner"><span>🚀</span><span>Enviar Pedidos a Sheets</span></div>
     </button>
     <button class="btn-cancel" id="cancelCsv" onclick="cancelarCsv()">✕ Cancelar</button>
 
   </div>
 
-  <!-- SHARED PROGRESS -->
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
     <div class="log" id="logBox"></div>
@@ -495,7 +489,6 @@
   <footer>gLiquidacionAreaId=4 · CORS required · localStorage token persistence</footer>
 </div>
 
-<!-- MODAL TOKEN -->
 <div class="modal-overlay" id="modalOverlay" onclick="cerrarModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-title">Obtener Bearer Token</div>
@@ -517,8 +510,10 @@
 
 <script>
 // ═══════════════════════════════════════════════════════
-//  CONSTANTES
+//  CONSTANTES Y GOOGLE SHEETS
 // ═══════════════════════════════════════════════════════
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzWvqm5D5BviBZYiyPctMZgl_hPT4q5571xX_d8f_5mpPXPIOiqICuwPHWB78x_iy5oIw/exec";
+
 const OBRAS = [
   {nombre:"Cobertura de Salud", base:"https://coberturasalud.client-api.saas.com.ar"},
   {nombre:"OSMISS",             base:"https://osmiss.client-api.saas.com.ar"},
@@ -693,6 +688,27 @@ function getToken(){
 }
 
 // ═══════════════════════════════════════════════════════
+//  FUNCIÓN PARA ENVIAR A GOOGLE SHEETS
+// ═══════════════════════════════════════════════════════
+async function enviarAGoogleSheets(sheetName, data2D) {
+  log(`Enviando datos a Google Sheets (${sheetName})...`, 'info');
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ sheetName: sheetName, data: data2D })
+    });
+    const result = await response.json();
+    if(result.status === 'success') {
+       log(`✓ ÉXITO: Los datos se actualizaron en la pestaña "${sheetName}"`, 'ok');
+    } else {
+       log(`✗ Error en Sheets: ${result.message}`, 'err');
+    }
+  } catch(e) {
+    log(`✗ Error de conexión con Google Sheets: ${e.message}`, 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
 //  FETCH CON RETRY
 // ═══════════════════════════════════════════════════════
 async function doFetch(url, token, asBlob=false, attempt=1){
@@ -779,17 +795,15 @@ async function iniciarDescargaExcel(){
   }
 
   if(ok>0 && headers){
-    const ws  = XLSX.utils.aoa_to_sheet([headers,...allRows]);
-    const wb  = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Comprobantes');
-    const fromStr = from.replace(/-/g,'');
-    const toStr   = to.replace(/-/g,'');
-    const fname   = `Comprobantes_Area4_${fromStr}-${toStr}.xlsx`;
-    XLSX.writeFile(wb, fname);
-    const msg = `✓ ${fname} · ${allRows.length} filas · ${ok}/${total} obras sociales`
+    // Preparamos los datos completos para enviar a Sheets
+    const finalData = [headers, ...allRows];
+    
+    // Lo enviamos directo a la pestaña "COMPROBANTES SUBIDOS"
+    await enviarAGoogleSheets("COMPROBANTES SUBIDOS", finalData);
+    
+    const msg = `✓ Datos procesados: ${allRows.length} filas · ${ok}/${total} obras sociales`
               + (errors.length ? ` · Errores: ${errors.join(', ')}` : '');
     showResult(msg);
-    log(`Archivo generado: ${fname}`,'ok');
   } else if(!cancelFlag){
     log('Sin datos. Verificá token y CORS.','err');
   }
@@ -826,20 +840,6 @@ function tipoToParams(tipo){
     rechazados:  'hasDevok=false&hasError=true',
     noaceptados: 'hasDevok=false&hasError=false'
   }[tipo];
-}
-
-function tzStamp(){
-  const tzNow = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Tucuman'}));
-  const pad=n=>String(n).padStart(2,'0');
-  return `${tzNow.getFullYear()}${pad(tzNow.getMonth()+1)}${pad(tzNow.getDate())}-${pad(tzNow.getHours())}${pad(tzNow.getMinutes())}`;
-}
-
-function downloadCsv(content, filename){
-  const blob = new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href=url; a.download=filename; a.click();
-  URL.revokeObjectURL(url);
 }
 
 async function iniciarDescargaCsv(){
@@ -910,15 +910,23 @@ async function iniciarDescargaCsv(){
     return as[0].localeCompare(bs[0]);
   });
 
-  const csvFinal = [header,...rows].join('\r\n');
-  const yearsStr = [...selYears].sort().join('-');
-  const fname    = `pedidos_${tipo}_${yearsStr}_all_obras_${tzStamp()}.csv`;
-  downloadCsv(csvFinal, fname);
+  // Mapeamos el selector del HTML con el nombre exacto de la hoja en tu Google Sheets
+  const sheetNamesMap = {
+    'aceptados': 'ACEPTADOS',
+    'rechazados': 'RECHAZADOS',
+    'noaceptados': 'NO ACEPTADOS NI RECHAZADOS'
+  };
+  const targetSheet = sheetNamesMap[tipo];
 
-  const msg = `✓ ${fname} · ${rows.length} filas · ${periodos_use.length} períodos`
+  // Convertimos las strings separadas por punto y coma (;) en un formato de celdas (Array 2D)
+  const data2D = [header.split(';'), ...rows.map(r => r.split(';'))];
+  
+  // Enviamos los datos a la pestaña correspondiente
+  await enviarAGoogleSheets(targetSheet, data2D);
+
+  const msg = `✓ Datos enviados a ${targetSheet} · ${rows.length} filas · ${periodos_use.length} períodos`
             + (errors.length ? ` · Errores: ${errors.length}` : '');
   showResult(msg);
-  log(`Archivo generado: ${fname}`,'ok');
 
   btn.disabled=false;
   document.getElementById('cancelCsv').classList.remove('visible');
